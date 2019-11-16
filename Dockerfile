@@ -40,7 +40,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libopusfile0 \
     libavcodec-dev \
     libavformat-dev \
-    libx264-dev
+    libx264-dev \
+    libvpx-dev \
+    vpx-tools 
 
 # Fetch and build GStreamer
 RUN git clone -b $GST_VERSION --depth 1 https://github.com/GStreamer/gstreamer.git \
@@ -68,7 +70,7 @@ RUN git clone -b $GST_VERSION --depth 1 https://github.com/GStreamer/gst-plugins
 RUN git clone -b $GST_VERSION --depth 1 https://github.com/GStreamer/gst-plugins-good \
     && cd gst-plugins-good \
     && git checkout $GST_VERSION \
-    && ./autogen.sh --prefix=/usr \
+    && ./autogen.sh --with-plugins="vpx,videofilter,debugutils,matroska" --prefix=/usr \
         --disable-gtk-doc --enable-orc \
     && make -j`nproc` \
     && make install \
